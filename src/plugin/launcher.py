@@ -15,6 +15,9 @@ class MALauncher(FlowLauncherV2):
       user typed is kept so ``change_query`` can rebuild the full query.
     * ``initialize`` carries the plugin's settings directory, which
       pyflowlauncher answers without exposing.
+    * A cancelled request is answered with ``"result": null`` next to the
+      error. StreamJsonRpc reads ``result`` first, so Flow takes it as a null
+      query response and fails. Error replies are sent without ``result``.
     """
 
     def __init__(self) -> None:
@@ -22,6 +25,12 @@ class MALauncher(FlowLauncherV2):
         self.action_keyword = ""
         self.settings_dir: Optional[str] = None
         messages = self._client.messages
+        send = self._client.send
+
+        def send_valid_envelope(message: dict) -> None:
+            if message.get("error") is not None:
+                message = {key: value for key, value in message.items() if key != "result"}
+            send(message)
 
         async def observed_messages():
             async for request in messages():
@@ -29,14 +38,18 @@ class MALauncher(FlowLauncherV2):
                 yield request
 
         self._client.messages = observed_messages
+        self._client.send = send_valid_envelope
 
     def _observe(self, request: dict) -> None:
-        params = request.get("params") or []
-        if not params or not isinstance(params[0], dict):
+        method = request.get("method")
+        params = request.get("params")
+        if method not in ("query", "initialize") or not isinstance(params, list) or not params:
             return
-        if request.get("method") == "query":
+        if not isinstance(params[0], dict):
+            return
+        if method == "query":
             self.action_keyword = params[0].get("actionKeyword") or ""
-        elif request.get("method") == "initialize":
+        else:
             metadata = params[0].get("currentPluginMetadata") or {}
             self.settings_dir = metadata.get("pluginSettingsDirectoryPath") or None
 

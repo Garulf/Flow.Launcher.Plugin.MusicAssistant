@@ -1,5 +1,7 @@
 import asyncio
+import json
 
+import pytest
 from pyflowlauncher.jsonrpc import JsonRPCV2Client
 
 from launcher import KEEP_OPEN, MALauncher
@@ -53,3 +55,31 @@ def test_settings_dir_defaults_to_none(monkeypatch):
     launcher = MALauncher()
     drain(launcher)
     assert launcher.settings_dir is None
+
+
+def test_cancel_request_with_object_params_passes_through(monkeypatch):
+    requests = [
+        {"jsonrpc": "2.0", "method": "$/cancelRequest", "params": {"id": 2}},
+        {"id": 3, "method": "query", "params": [{"search": "", "actionKeyword": "ma"}, {}]},
+    ]
+    feed(monkeypatch, requests)
+    launcher = MALauncher()
+    assert drain(launcher) == requests
+    assert launcher.action_keyword == "ma"
+
+
+def test_cancelled_request_reply_has_no_result_member(capsys):
+    launcher = MALauncher()
+
+    async def dispatch(method, params):
+        raise asyncio.CancelledError
+
+    async def handle():
+        with pytest.raises(asyncio.CancelledError):
+            await launcher._handle_request(5, "query", [""], dispatch)
+
+    asyncio.run(handle())
+    reply = json.loads(capsys.readouterr().out)
+    assert reply["id"] == 5
+    assert "result" not in reply
+    assert reply["error"]["code"] == -32800
