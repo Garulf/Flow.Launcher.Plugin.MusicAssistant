@@ -1,0 +1,31 @@
+{
+  "keyword": "ma",
+  "query": "players",
+  "icon": "../../data/icon.png",
+  "max_results": 4,
+  "selection": 0,
+  "results": [
+    {
+      "title": "Kitchen",
+      "subtitle": "Active · Playing · Get Lucky · Daft Punk",
+      "icon": "../../data/icons/speaker.png"
+    },
+    {
+      "title": "Downstairs",
+      "subtitle": "Paused · Lost in the Night · Kaytranada",
+      "icon": "../../data/icons/group.png"
+    },
+    {
+      "title": "Office",
+      "subtitle": "Idle",
+      "icon": "../../data/icons/speaker.png"
+    },
+    {
+      "title": "Bedroom",
+      "subtitle": "Idle",
+      "icon": "../../data/icons/speaker.png"
+    }
+  ],
+  "query_suggestion": "",
+  "show_caret": false
+}

@@ -1,0 +1,31 @@
+{
+  "keyword": "ma",
+  "query": "podcast The Week Ahead",
+  "icon": "../../data/icon.png",
+  "max_results": 4,
+  "selection": 0,
+  "results": [
+    {
+      "title": "Monday: The Week Ahead",
+      "subtitle": "12 Sep 2026 · 48 min · 20 min left",
+      "icon": "art/cover-6.png"
+    },
+    {
+      "title": "Friday: Weekend Edition",
+      "subtitle": "9 Sep 2026 · 35 min",
+      "icon": "art/cover-6.png"
+    },
+    {
+      "title": "Thursday: Long Read",
+      "subtitle": "8 Sep 2026 · 1 h 12 min",
+      "icon": "art/cover-6.png"
+    },
+    {
+      "title": "Wednesday: Midweek",
+      "subtitle": "7 Sep 2026 · 41 min",
+      "icon": "art/cover-6.png"
+    }
+  ],
+  "query_suggestion": "",
+  "show_caret": false
+}

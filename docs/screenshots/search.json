@@ -1,0 +1,41 @@
+{
+  "keyword": "ma",
+  "query": "daft punk",
+  "icon": "../../data/icon.png",
+  "max_results": 6,
+  "selection": 0,
+  "results": [
+    {
+      "title": "Daft Punk",
+      "subtitle": "Artist",
+      "icon": "art/cover-2.png"
+    },
+    {
+      "title": "Discovery",
+      "subtitle": "Album · Daft Punk",
+      "icon": "art/cover-3.png"
+    },
+    {
+      "title": "Random Access Memories",
+      "subtitle": "Album · Daft Punk",
+      "icon": "art/cover-1.png"
+    },
+    {
+      "title": "One More Time",
+      "subtitle": "Track · Daft Punk · Discovery",
+      "icon": "art/cover-3.png"
+    },
+    {
+      "title": "Around the World",
+      "subtitle": "Track · Daft Punk · Homework",
+      "icon": "art/cover-4.png"
+    },
+    {
+      "title": "Daft Punk Essentials",
+      "subtitle": "Playlist · Music Assistant",
+      "icon": "art/cover-5.png"
+    }
+  ],
+  "query_suggestion": "",
+  "show_caret": false
+}

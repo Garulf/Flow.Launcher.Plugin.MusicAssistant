@@ -1,0 +1,41 @@
+{
+  "keyword": "ma",
+  "query": "one more time",
+  "icon": "../../data/icon.png",
+  "max_results": 6,
+  "selection": 0,
+  "results": [
+    {
+      "title": "Play now",
+      "subtitle": "On Kitchen",
+      "icon": "../../data/icons/play.png"
+    },
+    {
+      "title": "Play next",
+      "subtitle": "On Kitchen",
+      "icon": "../../data/icons/next.png"
+    },
+    {
+      "title": "Add to queue",
+      "subtitle": "On Kitchen",
+      "icon": "../../data/icons/queue.png"
+    },
+    {
+      "title": "Start radio",
+      "subtitle": "Similar music on Kitchen",
+      "icon": "../../data/icons/radio.png"
+    },
+    {
+      "title": "Play on Office",
+      "subtitle": "One More Time",
+      "icon": "../../data/icons/speaker.png"
+    },
+    {
+      "title": "Play on Downstairs",
+      "subtitle": "One More Time",
+      "icon": "../../data/icons/group.png"
+    }
+  ],
+  "query_suggestion": "",
+  "show_caret": false
+}

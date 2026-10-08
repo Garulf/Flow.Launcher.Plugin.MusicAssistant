@@ -20,6 +20,7 @@ repos:
     hooks:
       - id: readwright-check
         files: ^(README\.md|docs/README\.md\.j2|readme\.yaml|CHANGELOG\.md|\.github/assets/.*)$
+        stages: [pre-push]
   - repo: local
     hooks:
       - id: pytest

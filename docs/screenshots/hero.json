@@ -1,0 +1,36 @@
+{
+  "keyword": "ma",
+  "query": "",
+  "icon": "../../data/icon.png",
+  "max_results": 5,
+  "selection": 0,
+  "results": [
+    {
+      "title": "Get Lucky",
+      "subtitle": "Daft Punk · Kitchen · 2:13 / 6:09",
+      "icon": "art/cover-1.png"
+    },
+    {
+      "title": "Next track on Kitchen",
+      "subtitle": "Get Lucky · Daft Punk",
+      "icon": "../../data/icons/next.png"
+    },
+    {
+      "title": "Previous track on Kitchen",
+      "subtitle": "Get Lucky · Daft Punk",
+      "icon": "../../data/icons/previous.png"
+    },
+    {
+      "title": "Volume 35%",
+      "subtitle": "Kitchen · Enter to change",
+      "icon": "../../data/icons/volume.png"
+    },
+    {
+      "title": "Player: Kitchen",
+      "subtitle": "Switch to another player",
+      "icon": "../../data/icons/speaker.png"
+    }
+  ],
+  "query_suggestion": "",
+  "show_caret": true
+}
