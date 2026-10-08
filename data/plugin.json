@@ -1,0 +1,12 @@
+{
+  "ID": "86765B5FAA8C4D668FBE7CBA57A58D14",
+  "ActionKeyword": "ma",
+  "Name": "Music Assistant",
+  "Description": "Search, play and control music on your Music Assistant server",
+  "Author": "Garulf",
+  "Version": "0.1.0",
+  "Language": "python_v2",
+  "Website": "https://github.com/Garulf/Flow.Launcher.Plugin.MusicAssistant",
+  "IcoPath": "icon.png",
+  "ExecuteFileName": "run.py"
+}

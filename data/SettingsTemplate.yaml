@@ -1,0 +1,19 @@
+body:
+  - type: input
+    attributes:
+      name: server_url
+      label: Server URL
+      description: Address of your Music Assistant server, for example http://192.168.1.10:8095
+      defaultValue: ""
+  - type: passwordBox
+    attributes:
+      name: token
+      label: Token
+      description: A long-lived token created in Music Assistant's settings
+      defaultValue: ""
+  - type: checkbox
+    attributes:
+      name: library_only
+      label: Search library only
+      description: Skip streaming providers when searching. Faster, but only finds music already in your library.
+      defaultValue: false
