@@ -166,3 +166,31 @@ def test_search_results_remember_podcasts(fake):
     fake.search_items = [PODCAST]
     run_query("daily")
     assert app.podcasts_seen["the daily"] == PODCAST
+
+
+def test_unexpected_error_still_returns_a_result(fake):
+    fake.error = RuntimeError("boom")
+    (result,) = run_query("x")
+    assert result.title == "Music Assistant error"
+    assert result.subtitle == "boom"
+
+
+def test_scores_leave_room_for_flow_selection_boost(fake):
+    fake.recents = [TRACK]
+    scores = [r.score for r in run_query("")]
+    assert all(a - b >= 1000 for a, b in zip(scores, scores[1:]))
+
+
+def test_dashboard_survives_failing_secondary_calls(fake):
+    fake.failing = {"in_progress"}
+    fake.recents = [TRACK]
+    assert titles(run_query("")) == [
+        "One More Time", "Next track on Kitchen", "Previous track on Kitchen", "Volume 35%",
+        "Player: Kitchen", "One More Time",
+    ]
+
+
+def test_episode_list_is_capped(fake):
+    fake.library_items["podcasts"] = [PODCAST]
+    fake.episodes = [EPISODE] * 60
+    assert len(run_query("podcast The Daily")) == 50

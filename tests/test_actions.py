@@ -59,3 +59,9 @@ def test_open_settings(fake, messages):
 
 def test_keep_open():
     assert run(actions.keep_open()) == KEEP_OPEN
+
+
+def test_unexpected_failure_shows_message(fake, messages):
+    fake.error = RuntimeError("boom")
+    run(actions.player_cmd("kitchen", "Kitchen", "next"))
+    assert messages[0]["Parameters"][:2] == ["Couldn't skip to the next track on Kitchen", "boom"]

@@ -12,6 +12,8 @@ from models import MediaItem, Player
 from state import choose_active
 
 plugin = app.plugin
+SCORE_STEP = 1000
+EPISODE_LIMIT = 50
 LIBRARY_NAMES = {
     "playlists": "playlists",
     "radio": "radio stations",
@@ -30,8 +32,11 @@ async def query(query: str) -> List[Result]:
         found = await respond(parse(query))
     except MAError as error:
         found = [r.error_result(error, normalize_url(str(plugin.settings.get("server_url") or "")))]
+    except Exception as error:
+        plugin.logger.exception("Query %r failed", query)
+        found = [r.message_result("Music Assistant error", str(error) or type(error).__name__)]
     for index, result in enumerate(found):
-        result.score = len(found) - index
+        result.score = (len(found) - index) * SCORE_STEP
     return found
 
 
@@ -66,7 +71,13 @@ def no_players() -> Result:
 
 
 async def dashboard(client: MAClient, target: r.Target) -> List[Result]:
-    progress, recents = await asyncio.gather(client.in_progress(), client.recently_played())
+    progress, recents = await asyncio.gather(client.in_progress(), client.recently_played(), return_exceptions=True)
+    if isinstance(progress, BaseException):
+        plugin.logger.warning("Continue listening unavailable: %s", progress)
+        progress = []
+    if isinstance(recents, BaseException):
+        plugin.logger.warning("Recently played unavailable: %s", recents)
+        recents = []
     player = target.player
     rows = [
         r.now_playing_result(target),
@@ -139,4 +150,4 @@ async def episodes_view(client: MAClient, target: r.Target, name: str) -> List[R
     if podcast is None:
         return [r.message_result(f'No podcast named "{name}"', icon_name="podcast")]
     episodes = await client.podcast_episodes(podcast)
-    return media_list(episodes, target, f"{podcast.name} has no episodes")
+    return media_list(episodes[:EPISODE_LIMIT], target, f"{podcast.name} has no episodes")

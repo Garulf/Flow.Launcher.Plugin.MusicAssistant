@@ -51,9 +51,10 @@ def normalize_url(url: str) -> str:
     return url
 
 
-def _has_host(url: str) -> bool:
+def _is_valid_url(url: str) -> bool:
     try:
-        return bool(urlsplit(url).hostname)
+        parts = urlsplit(url)
+        return bool(parts.hostname) and parts.port != 0
     except ValueError:
         return False
 
@@ -75,14 +76,19 @@ class MAClient:
         self.base_url = normalize_url(base_url)
         self.library_only = library_only
         self._clock = clock
-        if not _has_host(self.base_url):
+        if not _is_valid_url(self.base_url):
             raise NotConfigured(f"{base_url.strip()} is not a valid server URL")
-        self._http = httpx.AsyncClient(
-            base_url=self.base_url,
-            headers={"Authorization": f"Bearer {token}"},
-            timeout=TIMEOUT,
-            transport=transport,
-        )
+        if not token.isascii():
+            raise NotConfigured("The token has characters a token can't contain. Paste it again.")
+        try:
+            self._http = httpx.AsyncClient(
+                base_url=self.base_url,
+                headers={"Authorization": f"Bearer {token}"},
+                timeout=TIMEOUT,
+                transport=transport,
+            )
+        except (httpx.InvalidURL, ValueError) as error:
+            raise NotConfigured(f"{base_url.strip()} is not a valid server URL") from error
         self._players: Optional[Tuple[float, List[Player]]] = None
         self._searches: Dict[Tuple[str, bool], Tuple[float, List[MediaItem]]] = {}
 
@@ -94,6 +100,9 @@ class MAClient:
             raise Unreachable("The server took too long to answer") from error
         except (httpx.HTTPError, httpx.InvalidURL) as error:
             raise Unreachable(str(error) or type(error).__name__) from error
+        if 300 <= response.status_code < 400:
+            target = response.headers.get("Location", "another address")
+            raise Unreachable(f"The server redirected to {target}. Use that address in the plugin settings.")
         if response.status_code == 401:
             raise AuthFailed(response.text.strip() or "Authentication failed")
         if response.status_code >= 400:

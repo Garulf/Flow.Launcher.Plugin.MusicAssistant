@@ -3,6 +3,7 @@ import asyncio
 import pytest
 
 import app
+from client import ServerError
 import musicassistant
 from models import MediaItem, NowPlaying, Player
 
@@ -35,12 +36,15 @@ class FakeClient:
         self.episodes = []
         self.calls = []
         self.error = None
+        self.failing = set()
         self.closed = False
 
     async def _record(self, *call):
         self.calls.append(call)
         if self.error:
             raise self.error
+        if call[0] in self.failing:
+            raise ServerError(f"{call[0]} failed")
 
     async def players(self):
         await self._record("players")

@@ -247,3 +247,21 @@ def test_recents_and_in_progress(httpx_mock):
     first, second = (sent(r) for r in httpx_mock.get_requests())
     assert (first["command"], first["args"]) == ("music/recently_played_items", {"limit": 8})
     assert (second["command"], second["args"]) == ("music/in_progress_items", {"limit": 3})
+
+
+@pytest.mark.parametrize("url", ["http://host:abc", "host:8095:1", "http://127.0.0.1:99999"])
+def test_bad_port_is_not_configured(url):
+    with pytest.raises(NotConfigured):
+        MAClient(url, "secret")
+
+
+def test_non_ascii_token_is_not_configured():
+    with pytest.raises(NotConfigured, match="token"):
+        MAClient(BASE, "tök")
+
+
+def test_redirect_is_unreachable_and_names_the_target(httpx_mock):
+    httpx_mock.add_response(url=API, method="POST", status_code=308,
+                            headers={"Location": "https://ma.example.com/api"})
+    with pytest.raises(Unreachable, match="https://ma.example.com/api"):
+        run(client().call("players/all"))

@@ -26,7 +26,9 @@ async def _notify(title: str, subtitle: str) -> None:
 async def _run(verb: str, player_name: str, operation: Callable[[MAClient], Awaitable[None]]) -> None:
     try:
         await operation(app.session.client(plugin.settings))
-    except MAError as error:
+    except Exception as error:
+        if not isinstance(error, MAError):
+            plugin.logger.exception("Couldn't %s on %s", verb, player_name)
         await _notify(f"Couldn't {verb} on {player_name}", str(error) or type(error).__name__)
 
 
