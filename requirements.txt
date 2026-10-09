@@ -1,2 +1,2 @@
-pyflowlauncher==1.2.1
+pyflowlauncher==1.2.2
 httpx==0.28.1
