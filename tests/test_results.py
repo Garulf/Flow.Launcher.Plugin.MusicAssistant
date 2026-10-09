@@ -96,6 +96,29 @@ def test_now_playing_result():
     assert action(result) == ("player_cmd", ["kitchen", "Kitchen", "play_pause"])
 
 
+def test_now_playing_menu_has_controls_and_volume(fake):
+    result = r.now_playing_result(TARGET)
+    menu = result.context_data
+    assert titles(menu) == [
+        "Pause on Kitchen", "Next track on Kitchen", "Previous track on Kitchen", "Stop on Kitchen",
+        "Volume 35%", "Volume up", "Volume down", "Mute Kitchen",
+    ]
+    assert action(menu[0]) == ("player_cmd", ["kitchen", "Kitchen", "pause"])
+    assert action(menu[4]) == ("change_query", ["ma vol "])
+    assert action(menu[5]) == ("player_cmd", ["kitchen", "Kitchen", "volume_up"])
+    assert action(menu[7]) == ("set_mute", ["kitchen", "Kitchen", True])
+
+
+def test_now_playing_menu_when_paused_muted_or_idle(fake):
+    paused = Player("p", "Den", state="paused", muted=True, now_playing=KITCHEN.now_playing)
+    menu = r.now_playing_result(r.Target(BASE, paused, ())).context_data
+    assert titles(menu)[0] == "Play on Den"
+    assert titles(menu)[-1] == "Unmute Den"
+    idle = r.now_playing_result(r.Target(BASE, OFFICE, ()))
+    assert titles(idle.context_data) == titles(r.now_playing_menu(OFFICE))
+    assert titles(idle.context_data)[0] == "Play on Office"
+
+
 def test_now_playing_paused_and_idle():
     paused = Player("p", "Den", state="paused", now_playing=KITCHEN.now_playing)
     assert r.now_playing_result(r.Target(BASE, paused, ())).subtitle.startswith("Paused · Daft Punk · Den")

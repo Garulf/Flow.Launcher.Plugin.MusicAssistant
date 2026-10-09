@@ -21,10 +21,9 @@ def test_dashboard(fake):
     fake.recents = [TRACK, STATION]
     results = run_query("")
     assert titles(results) == [
-        "One More Time", "Next track on Kitchen", "Previous track on Kitchen", "Volume 35%",
-        "Player: Kitchen", "Monday", "Dune", "One More Time", "Radio Paradise",
+        "One More Time", "Player: Kitchen", "Monday", "Dune", "One More Time", "Radio Paradise",
     ]
-    assert results[5].subtitle == "Continue listening · 12 Sep 2026 · 48 min · 20 min left"
+    assert results[2].subtitle == "Continue listening · 12 Sep 2026 · 48 min · 20 min left"
 
 
 def test_dashboard_uses_stored_active_player(fake):
@@ -184,10 +183,7 @@ def test_scores_leave_room_for_flow_selection_boost(fake):
 def test_dashboard_survives_failing_secondary_calls(fake):
     fake.failing = {"in_progress"}
     fake.recents = [TRACK]
-    assert titles(run_query("")) == [
-        "One More Time", "Next track on Kitchen", "Previous track on Kitchen", "Volume 35%",
-        "Player: Kitchen", "One More Time",
-    ]
+    assert titles(run_query("")) == ["One More Time", "Player: Kitchen", "One More Time"]
 
 
 def test_episode_list_is_capped(fake):

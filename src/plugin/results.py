@@ -150,9 +150,10 @@ def now_playing_result(target: Target) -> Result:
     player = target.player
     playing = player.now_playing
     toggle = [player.player_id, player.name, "play_pause"]
+    menu = now_playing_menu(player)
     if playing is None:
         return Result(title=f"Nothing playing on {player.name}", subtitle=STATE_LABELS.get(player.state, ""),
-                      icon=app.icon("music")).add_action(actions.player_cmd, toggle)
+                      icon=app.icon("music"), context_data=menu).add_action(actions.player_cmd, toggle)
     progress = None
     if playing.duration:
         progress = f"{clock(playing.elapsed or 0)} / {clock(playing.duration)}"
@@ -160,7 +161,22 @@ def now_playing_result(target: Target) -> Result:
         progress = clock(playing.elapsed)
     subtitle = _join("Paused" if player.state == "paused" else None, playing.artist, player.name, progress)
     icon = absolute_url(target.base_url, playing.image_url) or app.icon("music")
-    return Result(title=playing.title, subtitle=subtitle, icon=icon).add_action(actions.player_cmd, toggle)
+    return Result(title=playing.title, subtitle=subtitle, icon=icon,
+                  context_data=menu).add_action(actions.player_cmd, toggle)
+
+
+def now_playing_menu(player: Player) -> List[Result]:
+    toggle = "pause" if player.playing else "play"
+    return [
+        transport_result(player, toggle),
+        transport_result(player, "next"),
+        transport_result(player, "previous"),
+        transport_result(player, "stop"),
+        volume_row(player),
+        volume_step(player, "up"),
+        volume_step(player, "down"),
+        mute_result(player),
+    ]
 
 
 def transport_result(player: Player, command: str) -> Result:
@@ -177,6 +193,18 @@ def volume_row(player: Player, keyword_row: bool = False) -> Result:
                       icon=app.icon("volume")).add_action(actions.keep_open)
     return Result(title=title, subtitle=f"{player.name} · Enter to change", icon=app.icon("volume")).add_action(
         actions.change_query, [app.full_query("vol ")])
+
+
+def volume_step(player: Player, direction: str) -> Result:
+    return Result(title=f"Volume {direction}", subtitle=f"On {player.name}", icon=app.icon("volume")).add_action(
+        actions.player_cmd, [player.player_id, player.name, f"volume_{direction}"])
+
+
+def mute_result(player: Player) -> Result:
+    muted = bool(player.muted)
+    title = f"Unmute {player.name}" if muted else f"Mute {player.name}"
+    return Result(title=title, subtitle="", icon=app.icon("volume" if muted else "mute")).add_action(
+        actions.set_mute, [player.player_id, player.name, not muted])
 
 
 def switch_player_result(player: Player) -> Result:
