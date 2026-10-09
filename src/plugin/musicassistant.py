@@ -78,7 +78,7 @@ async def dashboard(client: MAClient, target: r.Target) -> List[Result]:
     if isinstance(recents, BaseException):
         plugin.logger.warning("Recently played unavailable: %s", recents)
         recents = []
-    rows = [r.now_playing_result(target), r.switch_player_result(target.player)]
+    rows = [r.now_playing_result(target)]
     rows += [r.media_result(item, target, f"Continue listening · {r.media_subtitle(item)}")
              for item in progress[:3]]
     return rows + media_list(recents, target, None)

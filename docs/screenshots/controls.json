@@ -1,0 +1,66 @@
+{
+  "keyword": "ma",
+  "query": "",
+  "icon": "../../data/icon.png",
+  "max_results": 10,
+  "selection": 0,
+  "results": [
+    {
+      "title": "Pause on Kitchen",
+      "subtitle": "Get Lucky · Daft Punk",
+      "icon": "../../data/icons/pause.png"
+    },
+    {
+      "title": "Next track on Kitchen",
+      "subtitle": "Get Lucky · Daft Punk",
+      "icon": "../../data/icons/next.png"
+    },
+    {
+      "title": "Previous track on Kitchen",
+      "subtitle": "Get Lucky · Daft Punk",
+      "icon": "../../data/icons/previous.png"
+    },
+    {
+      "title": "Stop on Kitchen",
+      "subtitle": "Get Lucky · Daft Punk",
+      "icon": "../../data/icons/stop.png"
+    },
+    {
+      "title": "Volume 35%",
+      "subtitle": "Kitchen · Enter to change",
+      "icon": "../../data/icons/volume.png"
+    },
+    {
+      "title": "Volume up",
+      "subtitle": "On Kitchen",
+      "icon": "../../data/icons/volume.png"
+    },
+    {
+      "title": "Volume down",
+      "subtitle": "On Kitchen",
+      "icon": "../../data/icons/volume.png"
+    },
+    {
+      "title": "Mute Kitchen",
+      "subtitle": "",
+      "icon": "../../data/icons/mute.png"
+    },
+    {
+      "title": "Switch to Downstairs",
+      "subtitle": "Paused · Lost in the Night",
+      "icon": "../../data/icons/group.png"
+    },
+    {
+      "title": "Switch to Office",
+      "subtitle": "Idle",
+      "icon": "../../data/icons/speaker.png"
+    },
+    {
+      "title": "Switch to Bedroom",
+      "subtitle": "Idle",
+      "icon": "../../data/icons/speaker.png"
+    }
+  ],
+  "query_suggestion": "",
+  "show_caret": false
+}

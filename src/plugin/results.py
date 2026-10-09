@@ -150,7 +150,7 @@ def now_playing_result(target: Target) -> Result:
     player = target.player
     playing = player.now_playing
     toggle = [player.player_id, player.name, "play_pause"]
-    menu = now_playing_menu(player)
+    menu = now_playing_menu(target)
     if playing is None:
         return Result(title=f"Nothing playing on {player.name}", subtitle=STATE_LABELS.get(player.state, ""),
                       icon=app.icon("music"), context_data=menu).add_action(actions.player_cmd, toggle)
@@ -165,9 +165,10 @@ def now_playing_result(target: Target) -> Result:
                   context_data=menu).add_action(actions.player_cmd, toggle)
 
 
-def now_playing_menu(player: Player) -> List[Result]:
+def now_playing_menu(target: Target) -> List[Result]:
+    player = target.player
     toggle = "pause" if player.playing else "play"
-    return [
+    controls = [
         transport_result(player, toggle),
         transport_result(player, "next"),
         transport_result(player, "previous"),
@@ -177,6 +178,7 @@ def now_playing_menu(player: Player) -> List[Result]:
         volume_step(player, "down"),
         mute_result(player),
     ]
+    return controls + [switch_to_result(other) for other in target.others]
 
 
 def transport_result(player: Player, command: str) -> Result:
@@ -207,9 +209,11 @@ def mute_result(player: Player) -> Result:
         actions.set_mute, [player.player_id, player.name, not muted])
 
 
-def switch_player_result(player: Player) -> Result:
-    return Result(title=f"Player: {player.name}", subtitle="Switch to another player",
-                  icon=_player_icon(player)).add_action(actions.change_query, [app.full_query("players ")])
+def switch_to_result(player: Player) -> Result:
+    playing = player.now_playing
+    subtitle = _join(STATE_LABELS.get(player.state, player.state.capitalize()), playing.title if playing else None)
+    return Result(title=f"Switch to {player.name}", subtitle=subtitle, icon=_player_icon(player)).add_action(
+        actions.set_active, [player.player_id])
 
 
 def message_result(title: str, subtitle: str = "", icon_name: str = "warning") -> Result:

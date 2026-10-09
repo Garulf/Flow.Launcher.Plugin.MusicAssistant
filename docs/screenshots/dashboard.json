@@ -11,29 +11,29 @@
       "icon": "art/cover-1.png"
     },
     {
-      "title": "Next track on Kitchen",
-      "subtitle": "Get Lucky · Daft Punk",
-      "icon": "../../data/icons/next.png"
-    },
-    {
-      "title": "Previous track on Kitchen",
-      "subtitle": "Get Lucky · Daft Punk",
-      "icon": "../../data/icons/previous.png"
-    },
-    {
-      "title": "Volume 35%",
-      "subtitle": "Kitchen · Enter to change",
-      "icon": "../../data/icons/volume.png"
-    },
-    {
-      "title": "Player: Kitchen",
-      "subtitle": "Switch to another player",
-      "icon": "../../data/icons/speaker.png"
-    },
-    {
       "title": "Monday: The Week Ahead",
       "subtitle": "Continue listening · 12 Sep 2026 · 48 min · 20 min left",
       "icon": "art/cover-6.png"
+    },
+    {
+      "title": "Dune",
+      "subtitle": "Continue listening · Audiobook · Frank Herbert · 21 h · 18 h left",
+      "icon": "../../data/icons/audiobook.png"
+    },
+    {
+      "title": "Discovery",
+      "subtitle": "Album · Daft Punk",
+      "icon": "art/cover-3.png"
+    },
+    {
+      "title": "Daft Punk Essentials",
+      "subtitle": "Playlist · Music Assistant",
+      "icon": "art/cover-5.png"
+    },
+    {
+      "title": "Radio Paradise",
+      "subtitle": "Radio",
+      "icon": "../../data/icons/radio.png"
     }
   ],
   "query_suggestion": "",

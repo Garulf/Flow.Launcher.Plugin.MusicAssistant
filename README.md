@@ -12,7 +12,7 @@ Search, play and control Music Assistant from Flow Launcher.
 ## Features
 
 * **Search everything.** Tracks, albums, artists, playlists, radio, podcasts and audiobooks from your library and your streaming providers.
-* **What's playing.** Type `ma` to see the current track, skip it, change the volume or switch players.
+* **What's playing.** Type `ma` to see the current track. Press `Shift+Enter` on it to skip, change the volume or switch players.
 * **Pick the speaker.** Choose which player or group gets the music. The plugin remembers it.
 * **Shift+Enter for more.** Play a result next, add it to the queue, start a radio from it or send it to another player.
 * **Podcasts and audiobooks.** Browse episodes, and pick up half-finished episodes and books where you left off.
@@ -29,15 +29,19 @@ Until both are set, `ma` shows a result that opens the settings page.
 
 ## Usage
 
-Type `ma` to see what's playing on your active player, with controls and what you listened to recently:
+Type `ma` to see what's playing on your active player and what you listened to recently. `Enter` on the current track plays or pauses it:
 
 ![The Music Assistant dashboard in Flow Launcher](.github/assets/dashboard-light.png#gh-light-mode-only)![The Music Assistant dashboard in Flow Launcher](.github/assets/dashboard-dark.png#gh-dark-mode-only)
+
+`Shift+Enter` on the current track opens the player controls, the volume and the other players:
+
+![Player controls: pause, next, previous, stop, volume, mute and switch to another player](.github/assets/controls-light.png#gh-light-mode-only)![Player controls: pause, next, previous, stop, volume, mute and switch to another player](.github/assets/controls-dark.png#gh-dark-mode-only)
 
 Type anything else to search. `Enter` plays the result on the active player:
 
 ![Searching Music Assistant from Flow Launcher](.github/assets/search-light.png#gh-light-mode-only)![Searching Music Assistant from Flow Launcher](.github/assets/search-dark.png#gh-dark-mode-only)
 
-`Shift+Enter` opens more options for a result:
+`Shift+Enter` on a result opens more options for it:
 
 ![Options for a track: play now, play next, add to queue, start radio, play on another player](.github/assets/menu-light.png#gh-light-mode-only)![Options for a track: play now, play next, add to queue, start radio, play on another player](.github/assets/menu-dark.png#gh-dark-mode-only)
 
@@ -53,7 +57,7 @@ Type anything else to search. `Enter` plays the result on the active player:
 
 | Query | What it does |
 | --- | --- |
-| `ma` | Now playing, controls, continue listening and recently played |
+| `ma` | Now playing, continue listening and recently played |
 | `ma <text>` | Search |
 | `ma "<text>"` | Search, even when the text is one of the commands below |
 | `ma players [name]` | List players and groups; pick one to make it active |
