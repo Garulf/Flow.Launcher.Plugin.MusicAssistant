@@ -60,7 +60,7 @@ async def respond(route: Route) -> List[Result]:
     if isinstance(route, Volume):
         return volume_view(active, route)
     if isinstance(route, Mute):
-        return [mute_result(active)]
+        return [r.mute_result(active)]
     if isinstance(route, Library):
         return await library_view(client, target, route)
     return await episodes_view(client, target, route.podcast)
@@ -78,14 +78,7 @@ async def dashboard(client: MAClient, target: r.Target) -> List[Result]:
     if isinstance(recents, BaseException):
         plugin.logger.warning("Recently played unavailable: %s", recents)
         recents = []
-    player = target.player
-    rows = [
-        r.now_playing_result(target),
-        r.transport_result(player, "next"),
-        r.transport_result(player, "previous"),
-        r.volume_row(player),
-        r.switch_player_result(player),
-    ]
+    rows = [r.now_playing_result(target)]
     rows += [r.media_result(item, target, f"Continue listening · {r.media_subtitle(item)}")
              for item in progress[:3]]
     return rows + media_list(recents, target, None)
@@ -111,26 +104,14 @@ def players_view(players: List[Player], active_id: Optional[str], name_filter: s
     return [r.player_result(p, active_id) for p in shown]
 
 
-def _volume_step(player: Player, direction: str) -> Result:
-    return Result(title=f"Volume {direction}", subtitle=f"On {player.name}", icon=app.icon("volume")).add_action(
-        actions.player_cmd, [player.player_id, player.name, f"volume_{direction}"])
-
-
 def volume_view(player: Player, route: Volume) -> List[Result]:
     if route.level is None and route.delta is None:
-        return [r.volume_row(player, keyword_row=True), _volume_step(player, "up"), _volume_step(player, "down")]
+        return [r.volume_row(player, keyword_row=True), r.volume_step(player, "up"), r.volume_step(player, "down")]
     level = route.level if route.level is not None else (player.volume or 0) + (route.delta or 0)
     level = max(0, min(100, level))
     current = f"Currently {player.volume}%" if player.volume is not None else ""
     return [Result(title=f"Set {player.name} volume to {level}%", subtitle=current,
                    icon=app.icon("volume")).add_action(actions.set_volume, [player.player_id, player.name, level])]
-
-
-def mute_result(player: Player) -> Result:
-    muted = bool(player.muted)
-    title = f"Unmute {player.name}" if muted else f"Mute {player.name}"
-    return Result(title=title, subtitle="", icon=app.icon("volume" if muted else "mute")).add_action(
-        actions.set_mute, [player.player_id, player.name, not muted])
 
 
 async def library_view(client: MAClient, target: r.Target, route: Library) -> List[Result]:

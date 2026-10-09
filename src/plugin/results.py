@@ -150,9 +150,10 @@ def now_playing_result(target: Target) -> Result:
     player = target.player
     playing = player.now_playing
     toggle = [player.player_id, player.name, "play_pause"]
+    menu = now_playing_menu(target)
     if playing is None:
         return Result(title=f"Nothing playing on {player.name}", subtitle=STATE_LABELS.get(player.state, ""),
-                      icon=app.icon("music")).add_action(actions.player_cmd, toggle)
+                      icon=app.icon("music"), context_data=menu).add_action(actions.player_cmd, toggle)
     progress = None
     if playing.duration:
         progress = f"{clock(playing.elapsed or 0)} / {clock(playing.duration)}"
@@ -160,7 +161,24 @@ def now_playing_result(target: Target) -> Result:
         progress = clock(playing.elapsed)
     subtitle = _join("Paused" if player.state == "paused" else None, playing.artist, player.name, progress)
     icon = absolute_url(target.base_url, playing.image_url) or app.icon("music")
-    return Result(title=playing.title, subtitle=subtitle, icon=icon).add_action(actions.player_cmd, toggle)
+    return Result(title=playing.title, subtitle=subtitle, icon=icon,
+                  context_data=menu).add_action(actions.player_cmd, toggle)
+
+
+def now_playing_menu(target: Target) -> List[Result]:
+    player = target.player
+    toggle = "pause" if player.playing else "play"
+    controls = [
+        transport_result(player, toggle),
+        transport_result(player, "next"),
+        transport_result(player, "previous"),
+        transport_result(player, "stop"),
+        volume_row(player),
+        volume_step(player, "up"),
+        volume_step(player, "down"),
+        mute_result(player),
+    ]
+    return controls + [switch_to_result(other) for other in target.others]
 
 
 def transport_result(player: Player, command: str) -> Result:
@@ -179,9 +197,23 @@ def volume_row(player: Player, keyword_row: bool = False) -> Result:
         actions.change_query, [app.full_query("vol ")])
 
 
-def switch_player_result(player: Player) -> Result:
-    return Result(title=f"Player: {player.name}", subtitle="Switch to another player",
-                  icon=_player_icon(player)).add_action(actions.change_query, [app.full_query("players ")])
+def volume_step(player: Player, direction: str) -> Result:
+    return Result(title=f"Volume {direction}", subtitle=f"On {player.name}", icon=app.icon("volume")).add_action(
+        actions.player_cmd, [player.player_id, player.name, f"volume_{direction}"])
+
+
+def mute_result(player: Player) -> Result:
+    muted = bool(player.muted)
+    title = f"Unmute {player.name}" if muted else f"Mute {player.name}"
+    return Result(title=title, subtitle="", icon=app.icon("volume" if muted else "mute")).add_action(
+        actions.set_mute, [player.player_id, player.name, not muted])
+
+
+def switch_to_result(player: Player) -> Result:
+    playing = player.now_playing
+    subtitle = _join(STATE_LABELS.get(player.state, player.state.capitalize()), playing.title if playing else None)
+    return Result(title=f"Switch to {player.name}", subtitle=subtitle, icon=_player_icon(player)).add_action(
+        actions.set_active, [player.player_id])
 
 
 def message_result(title: str, subtitle: str = "", icon_name: str = "warning") -> Result:
